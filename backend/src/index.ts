@@ -7,11 +7,9 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req: Request, res: Response) => {
-  const responseBody = {
+  res.status(200).json({
     message: 'Hello Express + TypeScript Server',
-  };
-
-  res.status(200).json(responseBody);
+  });
 });
 
 app.listen(port, () => {
