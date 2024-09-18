@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { getUserProfileInfo } from './getUserProfileInfo';
+import { recogniseFood } from './recogniseFood';
 
 dotenv.config();
 
@@ -16,6 +17,18 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/getUserProfileInfo', async (_req: Request, res: Response) => {
   try {
     const data = await getUserProfileInfo();
+    res.status(200).json(data);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: `Remote server response: ${(error as Error).message}` });
+  }
+});
+
+app.get('/recogniseFood', async (_req: Request, res: Response) => {
+  try {
+    const imagePath = 'src/assets/1724193.jpg';
+    const data = await recogniseFood(imagePath);
     res.status(200).json(data);
   } catch (error) {
     res
