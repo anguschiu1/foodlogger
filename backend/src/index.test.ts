@@ -8,7 +8,7 @@ test('GET / should return 200 status code', async () => {
 });
 test('GET / should return correct greeting message', async () => {
   const response = await supertest(app).get('/');
-  expect(response.body.message).toBe('Hello Express + TypeScript Server');
+  expect(response.body.message).toBe('Hello to foodlogger API');
 });
 test('GET /getUserProfileInfo should return correct user id and company id', async () => {
   const response = await supertest(app).get('/getUserProfileInfo');

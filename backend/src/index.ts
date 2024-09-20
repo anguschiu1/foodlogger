@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { getUserProfileInfo } from './getUserProfileInfo';
 import { recogniseFood } from './recogniseFood';
-
 dotenv.config();
 
 const app: Express = express();
@@ -10,7 +9,7 @@ const port = process.env.PORT;
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
-    message: 'Hello Express + TypeScript Server',
+    message: 'Hello to foodlogger API',
   });
 });
 
