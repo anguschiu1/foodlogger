@@ -142,8 +142,6 @@ components:
       required:
         - name
         - weight
-        - meal_id
-        - id
       type: object
     FoodCreate:
       description: Data transfer object for creating a new Food for one food log entry
@@ -171,11 +169,6 @@ components:
           $ref: '#/components/schemas/User'
       required:
         - id
-        - title
-        - author
-        - fullText
-        - meal_name
-        - meal_date
         - date
         - owner
       type: object
@@ -211,7 +204,6 @@ components:
         - name
         - id
         - finished_at
-        - food
       type: object
     MealCreate:
       description: Data transfer object for creating a new Meal.
@@ -248,9 +240,6 @@ components:
           type: boolean
       required:
         - id
-        - name
-        - address
-        - active
       type: object
     UserCreate:
       description: Data transfer object for creating a new User.
@@ -416,7 +405,13 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/User'
+                  status:
+                    default: success
+                    enum:
+                      - success
+                    type: string
                 required:
+                  - status
                   - data
                 title: CreateUserCreated
                 type: object
@@ -482,12 +477,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/User'
-                required:
-                  - data
+                $ref: '#/components/schemas/User'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':

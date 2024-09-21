@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --watch 'src/**/*.yaml' src/index.ts",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -17,6 +17,7 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "express": "5.0.0",
+    "express-openapi-validator": "^5.3.7",
     "formdata-node": "^6.0.3",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
