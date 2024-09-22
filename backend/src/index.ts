@@ -72,3 +72,26 @@ app.listen(port, () => {
 });
 
 export default app;
+// import Sequelize from 'sequelize';
+import sequelize from './db';
+import User from './models/User';
+
+// sequelize.sync({ alter: true });
+// sequelize.sync({ force: true });
+
+// async function createUser() {
+//   try {
+//     await sequelize.sync({ force: true }); //drop existing tables and re-creates them
+//     const user = await User.create({
+//       email: 'testuser@efxample.com',
+//       password: 'password123',
+//       firstName: 'Test',
+//       lastName: 'User',
+//       city: 'New York',
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
+// createUser();
