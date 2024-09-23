@@ -1,6 +1,7 @@
 import { expect, test, vi } from 'vitest';
 import supertest from 'supertest';
 import app from './index';
+import sequelize from './db';
 
 test('GET /spec should return 200 status code', async () => {
   const response = await supertest(app).get('/spec');
@@ -48,7 +49,28 @@ test('GET /foodlogs should return correct status code if no user id is provided'
   const response = await supertest(app).get('/foodlogs');
   expect(response.status).toBe(404);
 });
+test('POST /users should create a new user and return the created user object', async () => {
+  await sequelize.sync({ force: true });
+  const response = await supertest(app).post('/users').send({
+    email: 'john.doe@example.com',
+    password: 'password123',
+    first_name: 'John',
+    last_name: 'Doe',
+    city: 'Cambridge',
+  });
 
+  expect(response.status).toBe(201);
+  expect(response.body).toEqual({
+    data: {
+      email: 'john.doe@example.com',
+      first_name: 'John',
+      last_name: 'Doe',
+      city: 'Cambridge',
+      id: 1,
+    },
+    status: 'success',
+  });
+});
 test('GET /users should return correct User object', async () => {
   const response = await supertest(app).get('/users/1');
   expect(response.status).toBe(200);
@@ -59,6 +81,10 @@ test('GET /users should return correct User object', async () => {
     id: 1,
     last_name: 'Doe',
   });
+});
+test('GET /users should return correct HTTP status code for no results returned', async () => {
+  const response = await supertest(app).get('/users/1000');
+  expect(response.status).toBe(404);
 });
 test('GET /users should return correct status code on non-numeric user id input', async () => {
   const response = await supertest(app).get('/users/john');

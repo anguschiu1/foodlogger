@@ -21,21 +21,22 @@ test('Create a new user and can be read correctly', async () => {
     const hashedPassword = await bcrypt.hash('password123', 10);
 
     const user = await User.create({
-      email: 'testuser@example.com',
       password: hashedPassword,
-      firstName: 'Test',
-      lastName: 'User',
-      city: 'New York',
+      city: 'Cambridge',
+      email: 'john.doe@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
     });
+
     const users = await User.findAll();
     expect(users.every((user) => user instanceof User)).toBeTruthy();
-    expect(user.id).toBeGreaterThan(0);
+    expect(user.id).toEqual(1);
     const foundUser = await User.findByPk(1);
     expect(foundUser).toBeTruthy();
-    expect(foundUser.email).toEqual('testuser@example.com');
-    expect(foundUser.firstName).toEqual('Test');
-    expect(foundUser.lastName).toEqual('User');
-    expect(foundUser.city).toEqual('New York');
+    expect(foundUser.email).toEqual('john.doe@example.com');
+    expect(foundUser.firstName).toEqual('John');
+    expect(foundUser.lastName).toEqual('Doe');
+    expect(foundUser.city).toEqual('Cambridge');
 
     const isPasswordMatch = await bcrypt.compare(
       'password123',

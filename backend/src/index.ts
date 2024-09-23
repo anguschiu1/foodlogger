@@ -4,7 +4,9 @@ import path from 'path';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { recogniseFood } from './LogMealServices';
 import { getFoodLogs } from './FoodLogServices';
-import { getUsers } from './UserServices';
+import { getUsers, createUsers } from './UserServices';
+import sequelize from './db';
+import User from './models/User';
 
 dotenv.config();
 
@@ -22,7 +24,7 @@ app.use('/spec', express.static(apiSpec));
 app.use(
   OpenApiValidator.middleware({
     apiSpec,
-    validateResponses: true,
+    validateResponses: false,
   })
 );
 
@@ -35,11 +37,33 @@ app.get('/users/:user_id', async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
     const data = await getUsers(parseInt(user_id)); // it is Ok as user_id is validated as integer by OpenApiValidator middleware
-    res.status(200).json(data);
+    if (data) {
+      res.status(200).json(data);
+    } else {
+      res.status(404).json({ message: 'Not Found' });
+    }
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: `Remote server response: ${(error as Error).message}` });
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.post('/users', async (req: Request, res: Response) => {
+  try {
+    console.log('Received user data:', req.body);
+    const user = await createUsers(req.body);
+    res.status(201).json({
+      data: {
+        city: user.city,
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        id: user.id,
+      },
+      status: 'success',
+    });
+  } catch (error) {
+    console.error('Error creating user:', (error as Error).message);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
@@ -49,9 +73,7 @@ app.get('/foodlogs/:user_id', async (req: Request, res: Response) => {
     const data = await getFoodLogs(parseInt(user_id)); // it is Ok as user_id is validated as integer by OpenApiValidator middleware
     res.status(200).json(data);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: `Remote server response: ${(error as Error).message}` });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
@@ -72,26 +94,3 @@ app.listen(port, () => {
 });
 
 export default app;
-// import Sequelize from 'sequelize';
-import sequelize from './db';
-import User from './models/User';
-
-// sequelize.sync({ alter: true });
-// sequelize.sync({ force: true });
-
-// async function createUser() {
-//   try {
-//     await sequelize.sync({ force: true }); //drop existing tables and re-creates them
-//     const user = await User.create({
-//       email: 'testuser@efxample.com',
-//       password: 'password123',
-//       firstName: 'Test',
-//       lastName: 'User',
-//       city: 'New York',
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
-// createUser();
