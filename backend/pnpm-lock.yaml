@@ -29,6 +29,9 @@ importers:
       formdata-node:
         specifier: ^6.0.3
         version: 6.0.3
+      loglevel:
+        specifier: ^1.9.2
+        version: 1.9.2
       sequelize:
         specifier: ^6.37.3
         version: 6.37.3(sqlite3@5.1.7)
@@ -1164,6 +1167,10 @@ packages:
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  loglevel@1.9.2:
+    resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
+    engines: {node: '>= 0.6.0'}
 
   loupe@3.1.1:
     resolution: {integrity: sha512-edNu/8D5MKVfGVFRhFf8aAxiTM6Wumfz5XsaatSxlD3w4R1d/WEKUTydCdPGbl9K7QG/Ca3GnDV2sIKIpXRQcw==}
@@ -3049,6 +3056,8 @@ snapshots:
   lodash.get@4.4.2: {}
 
   lodash@4.17.21: {}
+
+  loglevel@1.9.2: {}
 
   loupe@3.1.1:
     dependencies:

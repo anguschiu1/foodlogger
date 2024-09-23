@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db';
+import Meal from './Meal';
 
 const Food = sequelize.define('Food', {
   id: {
@@ -16,5 +17,6 @@ const Food = sequelize.define('Food', {
     allowNull: false,
   },
 });
-
+Meal.hasMany(Food);
+Food.belongsTo(Meal);
 export default Food;

@@ -21,6 +21,7 @@
     "express": "5.0.0",
     "express-openapi-validator": "^5.3.7",
     "formdata-node": "^6.0.3",
+    "loglevel": "^1.9.2",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
   },

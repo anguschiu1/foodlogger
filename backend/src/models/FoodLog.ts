@@ -1,22 +1,27 @@
 import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from '../db';
+import Meal from './Meal';
+import Food from './Food';
+import User from './User';
 
-export const FoodLogModel = async (sequelize: Sequelize) => {
-  const FoodLog = sequelize.define(
-    'FoodLog',
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      date: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-      },
+const FoodLog = sequelize.define(
+  'FoodLog',
+  {
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
-    {
-      // Other model options go here
-    }
-  );
-  return FoodLog;
-};
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+  },
+  {
+    // Other model options go here
+  }
+);
+
+User.hasMany(FoodLog);
+FoodLog.belongsTo(User);
+export default FoodLog;

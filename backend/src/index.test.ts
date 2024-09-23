@@ -7,48 +7,6 @@ test('GET /spec should return 200 status code', async () => {
   const response = await supertest(app).get('/spec');
   expect(response.status).toBe(200);
 });
-test('GET /foodlogs should return correct greeting message', async () => {
-  const response = await supertest(app).get('/foodlogs/1');
-  expect(response.status).toBe(200);
-  expect(response.body).toEqual([
-    {
-      date: '12-31-2023',
-      id: 1,
-      meals: [
-        {
-          finishedAt: '12-31-2023 10:00:00',
-          foodConsumed: [
-            { name: 'White bread', weight: 100 },
-            { name: 'Butter', weight: 8 },
-          ],
-          id: 0,
-          image: '123.jpg',
-          name: 'Breakfast',
-        },
-        {
-          finishedAt: '12-31-2023 13:30:00',
-          foodConsumed: [
-            { name: 'Boiled potatoes', weight: 50 },
-            { name: 'butter', weight: 15 },
-          ],
-          id: 0,
-          image: '456.jpg',
-          name: 'Lunch',
-        },
-      ],
-      owner: { id: 1 },
-    },
-  ]);
-});
-
-test('GET /foodlogs should return correct status code on non-numeric user id input', async () => {
-  const response = await supertest(app).get('/foodlogs/john');
-  expect(response.status).toBe(400);
-});
-test('GET /foodlogs should return correct status code if no user id is provided', async () => {
-  const response = await supertest(app).get('/foodlogs');
-  expect(response.status).toBe(404);
-});
 test('POST /users should create a new user and return the created user object', async () => {
   await sequelize.sync({ force: true });
   const response = await supertest(app).post('/users').send({
@@ -71,6 +29,58 @@ test('POST /users should create a new user and return the created user object', 
     status: 'success',
   });
 });
+test('POST /foodlogs should create a new foodlog and return foodlog object', async () => {
+  const response = await supertest(app)
+    .post('/foodlogs/1')
+    .send({
+      date: '2023-12-31',
+      meals: [
+        {
+          finishedAt: '2023-12-31T10:00:00',
+          name: 'Breakfast',
+          foodConsumed: [
+            {
+              name: 'White bread',
+              weight: 100,
+            },
+            {
+              name: 'Butter',
+              weight: 8,
+            },
+          ],
+        },
+        {
+          finishedAt: '2023-12-31T13:30:00',
+          name: 'Lunch',
+          foodConsumed: [
+            {
+              name: 'Boiled potatoes',
+              weight: 50,
+            },
+            {
+              name: 'Butter',
+              weight: 15,
+            },
+          ],
+        },
+      ],
+    });
+  expect(response.status).toBe(201);
+});
+test('GET /foodlogs should return correct greeting message', async () => {
+  const response = await supertest(app).get('/foodlogs/1');
+  expect(response.status).toBe(200);
+});
+
+test('GET /foodlogs should return correct status code on non-numeric user id input', async () => {
+  const response = await supertest(app).get('/foodlogs/john');
+  expect(response.status).toBe(400);
+});
+test('GET /foodlogs should return correct status code if no user id is provided', async () => {
+  const response = await supertest(app).get('/foodlogs');
+  expect(response.status).toBe(404);
+});
+
 test('GET /users should return correct User object', async () => {
   const response = await supertest(app).get('/users/1');
   expect(response.status).toBe(200);

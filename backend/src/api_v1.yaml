@@ -7,9 +7,9 @@ components:
       schema:
         type: integer
     from:
-      description:
-        Specify starting date range (inclusive) in format 'YYYY-MM-DD'. If
-        this is not provided it will return the information as '1970-01-01'.
+      description: >-
+        Specify starting date range (inclusive) in format 'YYYY-MM-DD'. If this
+        is not provided it will return the information as '1970-01-01'.
       in: query
       name: from
       schema:
@@ -21,9 +21,9 @@ components:
       schema:
         type: string
     to:
-      description:
-        Specify ending date range (inclusive) in format 'YYYY-MM-DD'. If
-        this is not provided it will return the information as current day.
+      description: >-
+        Specify ending date range (inclusive) in format 'YYYY-MM-DD'. If this is
+        not provided it will return the information as current day.
       in: query
       name: to
       schema:
@@ -55,9 +55,9 @@ components:
             required:
               - message
             type: object
-      description:
-        The server could not understand the request due to invalid syntax.
-        The client should modify the request and try again.
+      description: >-
+        The server could not understand the request due to invalid syntax. The
+        client should modify the request and try again.
     Forbidden:
       content:
         application/json:
@@ -71,9 +71,9 @@ components:
             required:
               - message
             type: object
-      description:
-        The server understood the request, but refuses to authorize it.
-        Ensure the client has appropriate permissions.
+      description: >-
+        The server understood the request, but refuses to authorize it. Ensure
+        the client has appropriate permissions.
     InternalServerErrror:
       content:
         application/json:
@@ -87,15 +87,15 @@ components:
             required:
               - message
             type: object
-      description:
-        The server encountered an unexpected condition that prevented it
-        from fulfilling the request. Report the issue to the support team if it
+      description: >-
+        The server encountered an unexpected condition that prevented it from
+        fulfilling the request. Report the issue to the support team if it
         persists.
     NoContent:
       content: {}
-      description:
-        The request was successful, but there is no content to return in
-        the response.
+      description: >-
+        The request was successful, but there is no content to return in the
+        response.
     NotFound:
       content:
         application/json:
@@ -109,7 +109,7 @@ components:
             required:
               - message
             type: object
-      description:
+      description: >-
         The server cannot find the requested resource. The endpoint may be
         invalid or the resource may no longer exist.
     Unauthorized:
@@ -125,9 +125,9 @@ components:
             required:
               - message
             type: object
-      description:
-        Authentication is required to access the requested resource. The
-        client must include the appropriate credentials.
+      description: >-
+        Authentication is required to access the requested resource. The client
+        must include the appropriate credentials.
   schemas:
     Food:
       properties:
@@ -145,14 +145,15 @@ components:
       type: object
     FoodCreate:
       description: Data transfer object for creating a new Food for one food log entry
-      items:
-        properties:
-          name:
-            type: string
-          weight:
-            type: number
-        type: object
-      type: array
+      properties:
+        name:
+          type: string
+        weight:
+          type: number
+      required:
+        - name
+        - weight
+      type: object
       x-fiddle-dto-info:
         baseSchemaName: Food
     FoodLog:
@@ -165,12 +166,12 @@ components:
           items:
             $ref: '#/components/schemas/Meal'
           type: array
-        owner:
-          $ref: '#/components/schemas/User'
+        UserId:
+          type: integer
       required:
         - id
         - date
-        - owner
+        - UserId
       type: object
     FoodLogCreate:
       description: Data transfer object to create food log entry
@@ -179,7 +180,7 @@ components:
           type: string
         meals:
           items:
-            $ref: '#/components/schemas/Meal'
+            $ref: '#/components/schemas/MealCreate'
           type: array
       required:
         - date
@@ -212,7 +213,7 @@ components:
           type: string
         foodConsumed:
           items:
-            type: string
+            $ref: '#/components/schemas/FoodCreate'
           type: array
         name:
           type: string
@@ -297,7 +298,7 @@ paths:
                   - imageId
                 title: SubmitImageCreated
                 type: object
-          description:
+          description: >-
             Created - Resource successfully created and stored in backend and
             the recognition information is listed in JSON response body.
         '400':
@@ -313,9 +314,9 @@ paths:
         - foodlogs
   /foodlogs/{user_id}:
     post:
-      description:
-        Creates a new daily food log entry by a user. The request must
-        include the name of the meal and date time of each meals in a day.
+      description: >-
+        Creates a new daily food log entry by a user. The request must include
+        the name of the meal and date time of each meals in a day.
       operationId: createAFoodLogEntry
       parameters:
         - $ref: '#/components/parameters/user_id'
@@ -332,8 +333,6 @@ paths:
             application/json:
               schema:
                 properties:
-                  data:
-                    $ref: '#/components/schemas/FoodLog'
                   status:
                     default: success
                     enum:
@@ -341,10 +340,9 @@ paths:
                     type: string
                 required:
                   - status
-                  - data
                 title: CreateFoodLogCreated
                 type: object
-          description:
+          description: >-
             The request was successful, and a new resource was created. The URI
             of the newly created resource can be found in the response's
             Location header.
@@ -360,9 +358,9 @@ paths:
       tags:
         - foodlogs
     get:
-      description:
-        Fetches a list of food log entries for a user by providing User.id
-        . Each FoodLog object is sorted by meal date and includes meal's name,
+      description: >-
+        Fetches a list of food log entries for a user by providing User.id .
+        Each FoodLog object is sorted by meal date and includes meal's name,
         date consumed and details about the food consumed in each meals.
       operationId: getFoodLogEntries
       parameters:
@@ -478,6 +476,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              examples:
+                GetUserById:
+                  value: |-
+                    {
+                        "city": "Cambridge",
+                        "email": "john.doe@example.com",
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "id": 1
+                    }
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
