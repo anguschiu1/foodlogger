@@ -133,7 +133,7 @@ components:
       properties:
         id:
           type: integer
-        meal_id:
+        mealId:
           type: integer
         name:
           type: string
@@ -188,9 +188,9 @@ components:
         baseSchemaName: FoodLog
     Meal:
       properties:
-        finished_at:
+        finishedAt:
           type: string
-        food_consumed:
+        foodConsumed:
           items:
             $ref: '#/components/schemas/Food'
           type: array
@@ -203,21 +203,21 @@ components:
       required:
         - name
         - id
-        - finished_at
+        - finishedAt
       type: object
     MealCreate:
       description: Data transfer object for creating a new Meal.
       properties:
-        finished_at:
+        finishedAt:
           type: string
-        food_consumed:
+        foodConsumed:
           items:
             type: string
           type: array
         name:
           type: string
       required:
-        - finished_at
+        - finishedAt
         - name
       type: object
       x-fiddle-dto-info:
@@ -228,11 +228,11 @@ components:
           type: string
         email:
           type: string
-        first_name:
+        firstName:
           type: string
         id:
           type: integer
-        last_name:
+        lastName:
           type: string
         password:
           type: string
@@ -248,9 +248,9 @@ components:
           type: string
         email:
           type: string
-        first_name:
+        firstName:
           type: string
-        last_name:
+        lastName:
           type: string
         password:
           type: string
@@ -290,11 +290,11 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Food'
-                  image_id:
+                  imageId:
                     type: integer
                 required:
                   - food
-                  - image_id
+                  - imageId
                 title: SubmitImageCreated
                 type: object
           description:

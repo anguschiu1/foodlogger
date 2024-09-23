@@ -7,14 +7,7 @@ export const getUsers = async (user_id: number) => {
   if (user === null) {
     console.log('user not found in the database. User_id: ', user_id);
     return null;
-  } else
-    return {
-      city: 'Cambridge',
-      email: 'john.doe@example.com',
-      first_name: 'John',
-      id: 1,
-      last_name: 'Doe',
-    };
+  } else return user.toJSON();
 };
 
 export const createUsers = async (userData: any) => {
@@ -23,8 +16,8 @@ export const createUsers = async (userData: any) => {
   if (
     !userData.email ||
     !userData.password ||
-    !userData.first_name ||
-    !userData.last_name ||
+    !userData.firstName ||
+    !userData.lastName ||
     !userData.city
   ) {
     console.log('Missing required user data');
@@ -34,8 +27,8 @@ export const createUsers = async (userData: any) => {
   const user = await User.create({
     email: userData.email,
     password: hashedPassword,
-    firstName: userData.first_name,
-    lastName: userData.last_name,
+    firstName: userData.firstName,
+    lastName: userData.lastName,
     city: userData.city,
   });
   console.log('User created successfully');

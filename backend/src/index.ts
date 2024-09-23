@@ -24,7 +24,7 @@ app.use('/spec', express.static(apiSpec));
 app.use(
   OpenApiValidator.middleware({
     apiSpec,
-    validateResponses: false,
+    validateResponses: true,
   })
 );
 
@@ -38,7 +38,14 @@ app.get('/users/:user_id', async (req: Request, res: Response) => {
     const { user_id } = req.params;
     const data = await getUsers(parseInt(user_id)); // it is Ok as user_id is validated as integer by OpenApiValidator middleware
     if (data) {
-      res.status(200).json(data);
+      const trimmedData = {
+        city: data.city,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        id: data.id,
+      };
+      res.status(200).json(trimmedData);
     } else {
       res.status(404).json({ message: 'Not Found' });
     }
@@ -55,8 +62,8 @@ app.post('/users', async (req: Request, res: Response) => {
       data: {
         city: user.city,
         email: user.email,
-        first_name: user.firstName,
-        last_name: user.lastName,
+        firstName: user.firstName,
+        lastName: user.lastName,
         id: user.id,
       },
       status: 'success',

@@ -5,8 +5,8 @@ export const getFoodLogs = async (user_id: number) => {
       id: 1,
       meals: [
         {
-          finished_at: '12-31-2023 10:00:00',
-          food_consumed: [
+          finishedAt: '12-31-2023 10:00:00',
+          foodConsumed: [
             {
               name: 'White bread',
               weight: 100,
@@ -21,8 +21,8 @@ export const getFoodLogs = async (user_id: number) => {
           name: 'Breakfast',
         },
         {
-          finished_at: '12-31-2023 13:30:00',
-          food_consumed: [
+          finishedAt: '12-31-2023 13:30:00',
+          foodConsumed: [
             {
               name: 'Boiled potatoes',
               weight: 50,

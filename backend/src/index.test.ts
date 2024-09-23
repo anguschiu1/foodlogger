@@ -16,8 +16,8 @@ test('GET /foodlogs should return correct greeting message', async () => {
       id: 1,
       meals: [
         {
-          finished_at: '12-31-2023 10:00:00',
-          food_consumed: [
+          finishedAt: '12-31-2023 10:00:00',
+          foodConsumed: [
             { name: 'White bread', weight: 100 },
             { name: 'Butter', weight: 8 },
           ],
@@ -26,8 +26,8 @@ test('GET /foodlogs should return correct greeting message', async () => {
           name: 'Breakfast',
         },
         {
-          finished_at: '12-31-2023 13:30:00',
-          food_consumed: [
+          finishedAt: '12-31-2023 13:30:00',
+          foodConsumed: [
             { name: 'Boiled potatoes', weight: 50 },
             { name: 'butter', weight: 15 },
           ],
@@ -54,8 +54,8 @@ test('POST /users should create a new user and return the created user object', 
   const response = await supertest(app).post('/users').send({
     email: 'john.doe@example.com',
     password: 'password123',
-    first_name: 'John',
-    last_name: 'Doe',
+    firstName: 'John',
+    lastName: 'Doe',
     city: 'Cambridge',
   });
 
@@ -63,8 +63,8 @@ test('POST /users should create a new user and return the created user object', 
   expect(response.body).toEqual({
     data: {
       email: 'john.doe@example.com',
-      first_name: 'John',
-      last_name: 'Doe',
+      firstName: 'John',
+      lastName: 'Doe',
       city: 'Cambridge',
       id: 1,
     },
@@ -77,9 +77,9 @@ test('GET /users should return correct User object', async () => {
   expect(response.body).toEqual({
     city: 'Cambridge',
     email: 'john.doe@example.com',
-    first_name: 'John',
+    firstName: 'John',
     id: 1,
-    last_name: 'Doe',
+    lastName: 'Doe',
   });
 });
 test('GET /users should return correct HTTP status code for no results returned', async () => {
