@@ -1,7 +1,5 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from '../db';
-import Meal from './Meal';
-import Food from './Food';
 import User from './User';
 
 const FoodLog = sequelize.define(

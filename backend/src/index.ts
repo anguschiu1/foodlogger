@@ -7,8 +7,10 @@ import { getFoodLogs, createFoodLogs } from './FoodLogServices';
 import { getUsers, createUsers } from './UserServices';
 import log from 'loglevel';
 dotenv.config();
+
+// Set up logging
 log.setLevel((process.env.LOG_LEVEL as log.LogLevelDesc) || 'info');
-console.log('Current log level:', log.getLevel());
+log.info('Current log level:', log.getLevel());
 
 const app: Express = express();
 const port = process.env.PORT;
@@ -17,7 +19,7 @@ app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: false }));
 
-// serve the Swagger/OpenAPI specification file
+// serve the Swagger/OpenAPI specification file (e.g. for Swagger UI or Postman)
 const apiSpec = path.join(__dirname, 'api_v1.yaml');
 app.use('/spec', express.static(apiSpec));
 
@@ -61,7 +63,7 @@ app.get('/users/:user_id', async (req: Request, res: Response) => {
 
 app.post('/users', async (req: Request, res: Response) => {
   try {
-    console.log('Received user data:', req.body);
+    log.info('Received user data:', req.body);
     const user = await createUsers(req.body);
     res.status(201).json({
       data: {
@@ -82,7 +84,7 @@ app.post('/users', async (req: Request, res: Response) => {
 app.get('/foodlogs/:user_id', async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
-    console.log('Received user_id:', user_id);
+    log.info('Received user_id:', user_id);
     const data = await getFoodLogs(parseInt(user_id)); // it is Ok as user_id is validated as integer by OpenApiValidator middleware
     if (data) {
       res.status(200).json(data);
@@ -97,7 +99,7 @@ app.get('/foodlogs/:user_id', async (req: Request, res: Response) => {
 app.post('/foodlogs/:user_id', async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
-    console.log('Received foodlog data:', req.body);
+    log.info('Received foodlog data:', req.body);
     await createFoodLogs(parseInt(user_id), req.body);
     res.status(201).json({ status: 'success' });
   } catch (error) {

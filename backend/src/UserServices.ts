@@ -1,18 +1,18 @@
-import sequelize from './db';
 import User from './models/User';
 import bcrypt from 'bcrypt';
+import log from 'loglevel';
 
 export const getUsers = async (user_id: number) => {
   const user = await User.findByPk(user_id);
   if (user === null) {
-    console.log('user not found in the database. User_id: ', user_id);
+    log.info('user not found in the database. User_id: ', user_id);
     return null;
   } else return user.toJSON();
 };
 
 export const createUsers = async (userData: any) => {
-  console.log('Creating new user in the database');
-  console.log(userData);
+  log.info('Creating new user in the database');
+  log.info(userData);
   if (
     !userData.email ||
     !userData.password ||
@@ -20,7 +20,7 @@ export const createUsers = async (userData: any) => {
     !userData.lastName ||
     !userData.city
   ) {
-    console.log('Missing required user data');
+    log.info('Missing required user data');
     throw new Error('Missing required user data');
   }
   const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -31,7 +31,7 @@ export const createUsers = async (userData: any) => {
     lastName: userData.lastName,
     city: userData.city,
   });
-  console.log('User created successfully');
-  console.log(user.toJSON());
+  log.info('User created successfully');
+  log.info(user.toJSON());
   return user.toJSON();
 };

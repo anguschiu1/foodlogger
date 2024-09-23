@@ -2,9 +2,10 @@ import sequelize from './db';
 import FoodLog from './models/FoodLog';
 import Meal from './models/Meal';
 import Food from './models/Food';
+import log from 'loglevel';
 
 export const getFoodLogs = async (user_id: number) => {
-  console.log('Getting food logs for user_id: ', user_id);
+  log.info('Getting food logs for user_id: ', user_id);
   try {
     const foodLogs = await FoodLog.findAll({
       where: { userId: user_id },
@@ -20,11 +21,11 @@ export const getFoodLogs = async (user_id: number) => {
       ],
     });
     if (foodLogs === null || foodLogs.length === 0) {
-      console.log('food logs not found in the database. User_id: ', user_id);
+      log.info('food logs not found in the database. User_id: ', user_id);
       return null;
     } else {
-      console.log('food logs found in the database');
-      console.log(foodLogs);
+      log.info('food logs found in the database');
+      log.info(foodLogs);
       return foodLogs;
     }
   } catch (error) {
@@ -33,9 +34,9 @@ export const getFoodLogs = async (user_id: number) => {
 };
 
 export const createFoodLogs = async (user_id: number, foodLogData: any) => {
-  console.log('Creating new food log in the database');
-  console.log(foodLogData);
-  console.log(foodLogData.meals);
+  log.info('Creating new food log in the database');
+  log.info(foodLogData);
+  log.info(foodLogData.meals);
   const meals = foodLogData.meals.map((meal: any) => ({
     finishedAt: meal.finishedAt,
     name: meal.name,
@@ -45,15 +46,15 @@ export const createFoodLogs = async (user_id: number, foodLogData: any) => {
     })),
   }));
   if (!user_id || !foodLogData.date || !foodLogData.meals) {
-    console.log('Missing required data to create foodlogs.');
+    log.info('Missing required data to create foodlogs.');
     throw new Error('Missing required data to create foodlogs.');
   }
   const foodLog = await FoodLog.create({
     date: foodLogData.date,
     UserId: user_id,
   });
-  // console.log('FoodLog.toJSON before creating meals inside');
-  // console.log(foodLog.toJSON());
+  // log.info('FoodLog.toJSON before creating meals inside');
+  // log.info(foodLog.toJSON());
   if (foodLogData.meals) {
     const createdMeals = await Promise.all(
       foodLogData.meals.map(async (meal: any) => {
@@ -77,7 +78,7 @@ export const createFoodLogs = async (user_id: number, foodLogData: any) => {
       })
     );
   }
-  console.log('FoodLog created successfully');
-  console.log(foodLog.toJSON());
+  log.info('FoodLog created successfully');
+  log.info(foodLog.toJSON());
   return foodLog.toJSON();
 };
