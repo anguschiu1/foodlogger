@@ -281,13 +281,18 @@ paths:
       parameters:
         - $ref: '#/components/parameters/meal_id'
       requestBody:
-        content:
-          image/jpeg:
-            schema:
-              type: string
-              format: binary
-        description: Submit a food image for a meal
         required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+              description: Submit a food image for a meal
+              required:
+                - image
       responses:
         '201':
           content:
