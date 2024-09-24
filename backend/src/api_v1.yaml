@@ -41,16 +41,10 @@ components:
         application/json:
           schema:
             properties:
-              errors:
-                items:
-                  properties:
-                    message:
-                      type: string
-                  required:
-                    - message
-                  type: object
-                type: array
               message:
+                default: Bad Request
+                enum:
+                  - Bad Request
                 type: string
             required:
               - message
@@ -91,11 +85,6 @@ components:
         The server encountered an unexpected condition that prevented it from
         fulfilling the request. Report the issue to the support team if it
         persists.
-    NoContent:
-      content: {}
-      description: >-
-        The request was successful, but there is no content to return in the
-        response.
     NotFound:
       content:
         application/json:
@@ -258,6 +247,24 @@ components:
       required:
         - password
         - email
+      type: object
+      x-fiddle-dto-info:
+        baseSchemaName: User
+    UserUpdate:
+      description: Data transfer object for updating all fields of an existing User (PATCH operation).
+      properties:
+        city:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        isActive:
+          type: boolean
+        last_name:
+          type: string
+        password:
+          type: string
       type: object
       x-fiddle-dto-info:
         baseSchemaName: User
@@ -437,19 +444,16 @@ paths:
       operationId: updateUser
       parameters:
         - $ref: '#/components/parameters/user_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        description: Updating any fields of an existing User (PATCH operation).
+        required: true
       responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/User'
-                required:
-                  - data
-                title: UpdateUserOk
-                type: object
-          description: OK - Resource successfully partially updated
+        '204':
+          description: The request was successful, but there is no content to return in the response.
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -507,7 +511,7 @@ paths:
         - $ref: '#/components/parameters/foodlog_id'
       responses:
         '204':
-          $ref: '#/components/responses/NoContent'
+          description: The request was successful, but there is no content to return in the response.
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':

@@ -4,7 +4,7 @@ import path from 'path';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { recogniseFood } from './LogMealServices';
 import { getFoodLogs, createFoodLogs } from './FoodLogServices';
-import { getUsers, createUsers } from './UserServices';
+import { getUsers, createUsers, updateUsers } from './UserServices';
 import log from 'loglevel';
 dotenv.config();
 
@@ -81,6 +81,29 @@ app.post('/users', async (req: Request, res: Response) => {
   }
 });
 
+app.patch('/users/:user_id', async (req: Request, res: Response) => {
+  try {
+    const { user_id } = req.params;
+    log.info('Received user_id:', user_id);
+    const data = await updateUsers(parseInt(user_id), req.body);
+    if (isNaN(parseInt(user_id))) {
+      res.status(400).json({ message: 'Bad Request' });
+      return;
+    }
+    log.info('Received user data:', req.body);
+    if (data == null) {
+      res.status(404).json({ message: 'Not Found' });
+      return;
+    } else {
+      log.info('returned with status 204:', data);
+      res.status(204).send();
+      return;
+    }
+  } catch (error) {
+    console.error('Error updating user:', (error as Error).message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 app.get('/foodlogs/:user_id', async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
