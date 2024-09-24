@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { recogniseFood } from './LogMealServices';
-import { getFoodLogs, createFoodLogs } from './FoodLogServices';
+import { getFoodLogs, createFoodLogs, deleteFoodLogs } from './FoodLogServices';
 import { getUsers, createUsers, updateUsers } from './UserServices';
 import log from 'loglevel';
 dotenv.config();
@@ -108,6 +108,10 @@ app.get('/foodlogs/:user_id', async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
     log.info('Received user_id:', user_id);
+    if (isNaN(parseInt(user_id))) {
+      res.status(400).json({ message: 'Bad Request' });
+      return;
+    }
     const data = await getFoodLogs(parseInt(user_id)); // it is Ok as user_id is validated as integer by OpenApiValidator middleware
     if (data) {
       res.status(200).json(data);
@@ -122,6 +126,11 @@ app.get('/foodlogs/:user_id', async (req: Request, res: Response) => {
 app.post('/foodlogs/:user_id', async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
+    log.info('Received user_id:', user_id);
+    if (isNaN(parseInt(user_id))) {
+      res.status(400).json({ message: 'Bad Request' });
+      return;
+    }
     log.info('Received foodlog data:', req.body);
     await createFoodLogs(parseInt(user_id), req.body);
     res.status(201).json({ status: 'success' });
@@ -131,6 +140,25 @@ app.post('/foodlogs/:user_id', async (req: Request, res: Response) => {
   }
 });
 
+app.delete(
+  '/foodlogs/:user_id/:food_log_id',
+  async (req: Request, res: Response) => {
+    try {
+      const { user_id, food_log_id } = req.params;
+      log.info('Received user_id:', user_id);
+      log.info('Received food_log_id:', food_log_id);
+      if (isNaN(parseInt(user_id)) || isNaN(parseInt(food_log_id))) {
+        res.status(400).json({ message: 'Bad Request' });
+        return;
+      }
+      await deleteFoodLogs(parseInt(user_id), parseInt(food_log_id));
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error deleting food log:', (error as Error).message);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+);
 app.get('/recogniseFood', async (_req: Request, res: Response) => {
   try {
     const imagePath = 'src/assets/1724193.jpg';

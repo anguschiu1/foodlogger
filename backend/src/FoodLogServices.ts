@@ -82,3 +82,21 @@ export const createFoodLogs = async (user_id: number, foodLogData: any) => {
   log.info(foodLog.toJSON());
   return foodLog.toJSON();
 };
+
+export const deleteFoodLogs = async (user_id: number, foodLog_id: number) => {
+  log.info('Deleting food log in the database');
+  log.info('user_id:', user_id);
+  log.info('foodLog_id:', foodLog_id);
+  try {
+    const foodLog = await FoodLog.findByPk(foodLog_id);
+    if (foodLog === null) {
+      log.info('Food log not found in the database. foodLog_id: ', foodLog_id);
+      return null;
+    }
+    await foodLog.destroy();
+    log.info('Food log deleted successfully');
+    return true;
+  } catch (error) {
+    console.error('Error deleting food log:', (error as Error).message);
+  }
+};
