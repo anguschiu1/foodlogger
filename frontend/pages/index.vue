@@ -29,67 +29,18 @@ const formSchema = toTypedSchema(
     password: z.string().min(8).max(50),
   })
 );
-
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
 });
-
-const callcount = ref(0);
-const didItWork = ref(false);
 const formValues = reactive({ email: '', password: '' });
-
-// const { error, data, execute } = await useFetch('/api/users/1', {
-//   method: 'GET',
-//   immediate: false,
-//   watch: false,
-//   onResponse() {
-//     callcount.value++;
-//   },
-//   onResponseError() {
-//     console.error('API request failed:', error);
-//     didItWork.value = false;
-//     toast({
-//       title: 'Uh oh! Something went wrong.',
-//       variant: 'destructive',
-//       description: h(
-//         'pre',
-//         { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-//         h('code', { class: 'text-white' }, error.value?.message)
-//       ),
-//     });
-//   },
-// });
-
-// const executeUseFetch = async () => {
-//   console.log('Fetching data from API...');
-//   await execute();
-// };
-
-// const body = computed(() => ({
-//   email: formValues.email,
-//   password: formValues.password,
-// }));
 
 const onSubmit = handleSubmit(async (values) => {
   formValues.email = values.email;
   formValues.password = values.password;
-  // executeUseFetch();
-  // if (!error.value) {
-  //   didItWork.value = true;
-  //   toast({
-  //     title: 'Returned userId is',
-  //     description: h(
-  //       'pre',
-  //       { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-  //       h('code', { class: 'text-white' }, data.value?.email)
-  //     ),
-  //   });
-  // }
   try {
     const data = await $fetch('/api/users/1', {
       method: 'GET',
       onResponse() {
-        callcount.value++;
         console.log('API request successful:');
       },
     });
@@ -171,7 +122,6 @@ const onSubmit = handleSubmit(async (values) => {
         <div class="mt-4 text-center text-sm">
           Don't have an account?
           <a href="signup" class="underline"> Sign up</a>
-          <div>{{ callcount }}</div>
         </div>
       </CardContent>
     </Card>
