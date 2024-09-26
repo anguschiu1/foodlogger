@@ -43,15 +43,44 @@ const formValues = reactive({
   email: '',
   password: '',
 });
-const onSubmit = handleSubmit((values) => {
-  toast({
-    title: 'You submitted the following values:',
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
-    ),
-  });
+const onSubmit = handleSubmit(async (values) => {
+  Object.assign(formValues, values);
+  try {
+    const data = await $fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(values),
+      onResponse() {
+        console.log('API POST request successful.');
+      },
+    });
+    console.log(data);
+    toast({
+      title: 'User created successfully! Logging in...',
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))
+      ),
+    });
+    setTimeout(() => {
+      navigateTo('/foodlogs');
+    }, 3000); // Wait for 3 seconds before redirecting
+  } catch (error: unknown) {
+    console.error('API request failed:', error);
+    toast({
+      title: 'Uh oh! Something went wrong.',
+      variant: 'destructive',
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h(
+          'code',
+          { class: 'text-white' },
+          error instanceof Error ? error.message : String(error)
+        )
+      ),
+    });
+  }
 });
 </script>
 

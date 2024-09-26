@@ -38,7 +38,7 @@ const onSubmit = handleSubmit(async (values) => {
   formValues.email = values.email;
   formValues.password = values.password;
   try {
-    const data = await $fetch('/api/users/1', {
+    const data: unknown = await $fetch('/api/users/1', {
       method: 'GET',
       onResponse() {
         console.log('API request successful:');
@@ -46,14 +46,14 @@ const onSubmit = handleSubmit(async (values) => {
     });
     console.log('API request successful:', data);
     toast({
-      title: 'Returned userId is',
+      title: 'Returned record with email',
       description: h(
         'pre',
         { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-        h('code', { class: 'text-white' }, data.email)
+        h('code', { class: 'text-white' }, (data as { email: string }).email)
       ),
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('API request failed:', error);
     toast({
       title: 'Uh oh! Something went wrong.',
@@ -61,7 +61,11 @@ const onSubmit = handleSubmit(async (values) => {
       description: h(
         'pre',
         { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-        h('code', { class: 'text-white' }, error.message)
+        h(
+          'code',
+          { class: 'text-white' },
+          error instanceof Error ? error.message : String(error)
+        )
       ),
     });
   }
