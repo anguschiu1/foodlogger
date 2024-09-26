@@ -3,6 +3,7 @@ import { h } from 'vue';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as z from 'zod';
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
 import { useToast } from '@/components/ui/toast/use-toast';
 import { Button } from '@/components/ui/button';
 import {
@@ -128,9 +129,9 @@ const onSubmit = handleSubmit(async (values) => {
       <CardContent>
         <form @submit="onSubmit">
           <div class="grid gap-4">
-            <FormField v-slot="{ componentField }" name="email">
-              <FormItem>
-                <div class="grid gap-2">
+            <div class="grid gap-2">
+              <FormField v-slot="{ componentField }" name="email">
+                <FormItem v-auto-animate>
                   <Label>Email</Label>
                   <FormControl>
                     <Input
@@ -140,13 +141,13 @@ const onSubmit = handleSubmit(async (values) => {
                     />
                   </FormControl>
                   <FormMessage />
-                </div>
-              </FormItem>
-            </FormField>
+                </FormItem>
+              </FormField>
+            </div>
 
-            <FormField v-slot="{ componentField }" name="password">
-              <FormItem>
-                <div class="grid gap-2">
+            <div class="grid gap-2">
+              <FormField v-slot="{ componentField }" name="password">
+                <FormItem v-auto-animate>
                   <div class="flex items-center">
                     <Label for="password">Password</Label>
                     <a
@@ -160,9 +161,9 @@ const onSubmit = handleSubmit(async (values) => {
                     <Input type="password" v-bind="componentField" />
                   </FormControl>
                   <FormMessage />
-                </div>
-              </FormItem>
-            </FormField>
+                </FormItem>
+              </FormField>
+            </div>
 
             <Button type="submit" class="w-full"> Login </Button>
           </div>
