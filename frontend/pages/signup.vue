@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { h } from 'vue';
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import * as z from 'zod';
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
+import { useToast } from '@/components/ui/toast/use-toast';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,6 +15,44 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+const { toast } = useToast();
+
+const formSchema = toTypedSchema(
+  z.object({
+    firstName: z.string().min(2).max(50),
+    lastName: z.string().min(2).max(50),
+    city: z.string().min(2).max(50),
+    email: z.string().email(),
+    password: z.string().min(8).max(50),
+  })
+);
+
+const { handleSubmit } = useForm({
+  validationSchema: formSchema,
+});
+const formValues = reactive({
+  firstName: '',
+  lastName: '',
+  city: '',
+  email: '',
+  password: '',
+});
+const onSubmit = handleSubmit((values) => {
+  toast({
+    title: 'You submitted the following values:',
+    description: h(
+      'pre',
+      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
+    ),
+  });
+});
 </script>
 
 <template>
@@ -21,41 +65,89 @@ import { Label } from '@/components/ui/label';
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div class="grid gap-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div class="grid gap-2">
-              <Label for="first-name">First name</Label>
-              <Input id="first-name" placeholder="John" required />
+        <form @submit="onSubmit">
+          <div class="grid gap-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="grid gap-2">
+                <FormField v-slot="{ componentField }" name="firstName">
+                  <FormItem v-auto-animate>
+                    <Label for="first-name">First name</Label>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="John"
+                        v-bind="componentField"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="grid gap-2">
+                <FormField v-slot="{ componentField }" name="lastName">
+                  <FormItem v-auto-animate>
+                    <Label for="last-name">Last name</Label>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Doe"
+                        v-bind="componentField"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
             </div>
             <div class="grid gap-2">
-              <Label for="last-name">Last name</Label>
-              <Input id="last-name" placeholder="Doe" required />
+              <FormField v-slot="{ componentField }" name="city">
+                <FormItem v-auto-animate>
+                  <Label for="city">City</Label>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Cambridge"
+                      v-bind="componentField"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
             </div>
+            <div class="grid gap-2">
+              <FormField v-slot="{ componentField }" name="email">
+                <FormItem v-auto-animate>
+                  <Label for="email">Email</Label>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="john.doe@example.com"
+                      v-bind="componentField"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
+            <div class="grid gap-2">
+              <FormField v-slot="{ componentField }" name="password">
+                <FormItem v-auto-animate>
+                  <Label for="password">Password</Label>
+                  <FormControl>
+                    <Input type="password" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
+            <Button type="submit" class="w-full"> Create an account </Button>
+            <!-- <Button variant="outline" class="w-full"> Sign up with GitHub </Button> -->
           </div>
-          <div class="grid gap-2">
-            <Label for="city">City</Label>
-            <Input id="city" placeholder="Cambridge" required />
+          <div class="mt-4 text-center text-sm">
+            Already have an account?
+            <a href="/" class="underline"> Sign in </a>
           </div>
-          <div class="grid gap-2">
-            <Label for="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="john.doe@example.com"
-              required
-            />
-          </div>
-          <div class="grid gap-2">
-            <Label for="password">Password</Label>
-            <Input id="password" type="password" />
-          </div>
-          <Button type="submit" class="w-full"> Create an account </Button>
-          <!-- <Button variant="outline" class="w-full"> Sign up with GitHub </Button> -->
-        </div>
-        <div class="mt-4 text-center text-sm">
-          Already have an account?
-          <a href="/" class="underline"> Sign in </a>
-        </div>
+        </form>
       </CardContent>
     </Card>
   </div>
