@@ -4,6 +4,16 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   modules: ['@nuxt/eslint', 'shadcn-nuxt'],
+  vite: {
+    server: {
+      proxy: {
+        '/api/': {
+          target: 'http://localhost:3000', // Your Node.js server URL
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
+    },
+  },
   shadcn: {
     /**
      * Prefix for all the imported component

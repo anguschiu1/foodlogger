@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { h } from 'vue';
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import * as z from 'zod';
+import { useToast } from '@/components/ui/toast/use-toast';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,6 +14,72 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+const { toast } = useToast();
+
+const formSchema = toTypedSchema(
+  z.object({
+    email: z.string().email(),
+    password: z.string().min(8).max(50),
+  })
+);
+
+const { handleSubmit } = useForm({
+  validationSchema: formSchema,
+});
+
+const callcount = ref(0);
+const didItWork = ref(false);
+const formValues = reactive({ email: '', password: '' });
+
+const { error, data, execute } = await useFetch('/api/users/1', {
+  method: 'GET',
+  immediate: false,
+  watch: false,
+  onResponse() {
+    callcount.value++;
+  },
+  onResponseError() {
+    console.error('API request failed:', error);
+    didItWork.value = false;
+    toast({
+      title: 'Uh oh! Something went wrong.',
+      variant: 'destructive',
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h('code', { class: 'text-white' }, error.value?.message)
+      ),
+    });
+  },
+});
+
+const executeUseFetch = async () => {
+  console.log('Fetching data from API...');
+  await execute();
+};
+
+const onSubmit = handleSubmit(async (values) => {
+  formValues.email = values.email;
+  formValues.password = values.password;
+  executeUseFetch();
+  if (!error.value) {
+    didItWork.value = true;
+    toast({
+      title: 'Returned userId is',
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h('code', { class: 'text-white' }, data.value?.email)
+      ),
+    });
+  }
+});
 </script>
 
 <template>
@@ -21,34 +92,47 @@ import { Label } from '@/components/ui/label';
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div class="grid gap-4">
-          <div class="grid gap-2">
-            <Label for="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
+        <form @submit="onSubmit">
+          <div class="grid gap-4">
+            <FormField v-slot="{ componentField }" name="email">
+              <FormItem>
+                <div class="grid gap-2">
+                  <Label>Email</Label>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="joe.doe@example.com"
+                      v-bind="componentField"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            </FormField>
+
+            <FormField v-slot="{ componentField }" name="password">
+              <FormItem>
+                <div class="grid gap-2">
+                  <div class="flex items-center">
+                    <Label for="password">Password</Label>
+                    <a
+                      href="foodlogs"
+                      class="ml-auto inline-block text-sm underline"
+                    >
+                      Try demo access
+                    </a>
+                  </div>
+                  <FormControl>
+                    <Input type="password" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            </FormField>
+
+            <Button type="submit" class="w-full"> Login </Button>
           </div>
-          <div class="grid gap-2">
-            <div class="flex items-center">
-              <Label for="password">Password</Label>
-              <a href="#" class="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </a>
-            </div>
-            <Input id="password" type="password" required />
-          </div>
-          <Button
-            type="submit"
-            class="w-full"
-            @click.prevent="$router.push('/foodLogs')"
-          >
-            Login
-          </Button>
-          <!-- <Button variant="outline" class="w-full"> Login with Google </Button> -->
-        </div>
+        </form>
         <div class="mt-4 text-center text-sm">
           Don't have an account?
           <a href="signup" class="underline"> Sign up</a>
