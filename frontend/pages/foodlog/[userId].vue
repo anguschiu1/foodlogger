@@ -15,20 +15,31 @@ const schema = z.object({
   meals: z
     .array(
       z.object({
-        name: z.enum(['Breakfast', 'Lunch', 'Dinner']),
-        hour: z.number().min(0).max(23),
-        minute: z.number().min(0).max(59),
+        name: z.enum([
+          'Breakfast',
+          'Lunch',
+          'Dinner',
+          'Tea',
+          'Snack',
+          'Drink',
+          'Supper',
+          'Others',
+        ]),
+        hour: z.number().int().min(0).max(23),
+        minute: z.number().int().min(0).max(59),
         foodConsumed: z
           .array(
-            z.object({
-              name: z.string(),
-              weight: z.coerce.number(),
-            })
+            z
+              .object({
+                name: z.string().max(100),
+                weight: z.number().min(0).max(10000),
+              })
+              .describe('Food / ingredients')
           )
-          .describe('Food consumed today'),
+          .describe('Food consumed in this meal'),
       })
     )
-    .describe('Meals consumed today'),
+    .describe('Define meals'),
 });
 
 async function onSubmit(values: Record<string, unknown>) {
@@ -62,9 +73,9 @@ async function onSubmit(values: Record<string, unknown>) {
         h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))
       ),
     });
-    // setTimeout(() => {
-    //   navigateTo('/foodlogs');
-    // }, 3000); // Wait for 3 seconds before redirecting
+    setTimeout(() => {
+      navigateTo('/foodlogs/' + userId);
+    }, 3000); // Wait for 3 seconds before redirecting
   } catch (error: unknown) {
     console.error('API request failed:', error);
     toast({
@@ -109,7 +120,14 @@ async function onSubmit(values: Record<string, unknown>) {
               :schema="schema"
               @submit="onSubmit"
             >
-              <Button type="submit"> Submit </Button>
+              <div class="flex gap-4">
+                <Button type="submit"> Submit </Button>
+                <Button
+                  variant="secondary"
+                  @click="navigateTo(`/foodlogs/${userId}`)"
+                  >Cancel</Button
+                >
+              </div>
             </AutoForm>
           </CardContent>
         </Card>

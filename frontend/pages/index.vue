@@ -42,6 +42,7 @@ const onSubmit = handleSubmit(async (values) => {
   formValues.email = values.email;
   formValues.password = values.password;
   try {
+    //TODO: Implement API call to authenticate user, login by email and password
     const data: data = await $fetch('/api/users/1', {
       method: 'GET',
       onResponse() {
@@ -59,7 +60,7 @@ const onSubmit = handleSubmit(async (values) => {
         ),
       });
       console.log('userId:', data.id);
-      navigateTo('/foodlog/' + data.id);
+      navigateTo('/foodlogs/' + data.id);
     } else {
       toast({
         title: 'Invalid credentials',
