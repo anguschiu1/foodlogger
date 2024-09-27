@@ -519,10 +519,6 @@ paths:
           description: The request was successful, but there is no content to return in the response.
         '401':
           $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerErrror'
       summary: Delete FoodLog entry
