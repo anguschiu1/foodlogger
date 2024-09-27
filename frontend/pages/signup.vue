@@ -63,7 +63,9 @@ const onSubmit = handleSubmit(async (values) => {
       ),
     });
     setTimeout(() => {
-      navigateTo('/foodlogs');
+      navigateTo('/foodlogs', {
+        props: { userId: data.userid },
+      });
     }, 3000); // Wait for 3 seconds before redirecting
   } catch (error: unknown) {
     console.error('API request failed:', error);

@@ -21,6 +21,9 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 const { toast } = useToast();
 
 const formSchema = toTypedSchema(
@@ -33,26 +36,42 @@ const { handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 const formValues = reactive({ email: '', password: '' });
+type data = { email: string; id: string };
 
 const onSubmit = handleSubmit(async (values) => {
   formValues.email = values.email;
   formValues.password = values.password;
   try {
-    const data: unknown = await $fetch('/api/users/1', {
+    const data: data = await $fetch('/api/users/1', {
       method: 'GET',
       onResponse() {
         console.log('API request successful:');
       },
     });
     console.log('API request successful:', data);
-    toast({
-      title: 'Returned record with email',
-      description: h(
-        'pre',
-        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-        h('code', { class: 'text-white' }, (data as { email: string }).email)
-      ),
-    });
+    if (data.email === formValues.email) {
+      toast({
+        title: 'Logging in...',
+        description: h(
+          'pre',
+          { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+          h('code', { class: 'text-white' }, data.email)
+        ),
+      });
+      console.log('userId:', data.id);
+      navigateTo('/foodlog/' + data.id);
+    } else {
+      toast({
+        title: 'Invalid credentials',
+        variant: 'destructive',
+        description: h(
+          'pre',
+          { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+          h('code', { class: 'text-white' }, 'Email or password is incorrect')
+        ),
+      });
+      console.log('Invalid credentials');
+    }
   } catch (error: unknown) {
     console.error('API request failed:', error);
     toast({
@@ -105,10 +124,7 @@ const onSubmit = handleSubmit(async (values) => {
                 <FormItem v-auto-animate>
                   <div class="flex items-center">
                     <Label for="password">Password</Label>
-                    <a
-                      href="foodlogs"
-                      class="ml-auto inline-block text-sm underline"
-                    >
+                    <a href="#" class="ml-auto inline-block text-sm underline">
                       Try demo access
                     </a>
                   </div>
