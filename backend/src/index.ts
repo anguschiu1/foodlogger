@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import * as OpenApiValidator from 'express-openapi-validator';
-import { recogniseFood } from './LogMealServices';
+import { submitImage, getIngredients } from './LogMealServices';
 import { getFoodLogs, createFoodLogs, deleteFoodLogs } from './FoodLogServices';
 import { getUsers, createUsers, updateUsers } from './UserServices';
 import multer from 'multer';
@@ -39,26 +39,40 @@ app.post(
   upload.single('image'),
   async (req: Request, res: Response) => {
     try {
+      const { meal_id } = req.params;
       if (!req.file) {
         res.status(400).json({ message: 'Bad Request' });
         return;
       }
       log.info('Received food image:', req.file);
       log.info('path:', req.file.path);
-      // const data = await recogniseFood(req.file.path);
-
-      // log.info('Food data:', data);
-      res.status(201).json({
-        food: [
-          {
-            id: 1,
-            mealId: 1,
-            name: 'bread',
-            weight: 10,
-          },
-        ],
-        imageId: 1,
+      const data = await submitImage(req.file.path);
+      log.info('Food data:', data.imageId);
+      const ingredients = await getIngredients(data.imageId);
+      log.info('Ingredients:', ingredients);
+      type Food = {
+        mealId: string;
+        name: string;
+        weight: number;
+      };
+      type FoodImage = {
+        food: Food[];
+        imageId: number;
+      };
+      const allFood: Food[] = [];
+      ingredients.foodName.forEach((foodName: string) => {
+        log.info('Found foodName:', foodName);
+        allFood.push({
+          mealId: meal_id,
+          name: foodName,
+          weight: 0,
+        });
       });
+      const resBody = {
+        food: allFood,
+        imageId: data.imageId,
+      };
+      res.status(201).json(resBody);
     } catch (error) {
       log.error('Error processing food image:', error);
       res.status(500).json({ message: 'Internal Server Error' });

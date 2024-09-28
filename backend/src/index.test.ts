@@ -224,20 +224,44 @@ describe('API Tests', () => {
     expect(response.status).toBe(404);
   });
 });
-// Uncomment the following test to test the /recogniseFood endpoint with a valid image file
-// test('GET /recogniseFood should return 200 status code with valid image file and food recognition results', async () => {
-//   const response = await supertest(app).get('/recogniseFood');
+// Uncomment the following test to test the /submitImage endpoint with a valid image file
+// test('POST /submitImage should return 201 status code with valid image file and food recognition results', async () => {
+//   const response = await supertest(app)
+//     .post('/submitImage')
+//     .attach('image', 'assets/1728299.jpg')
+//     .set('Content-Type', 'multipart/form-data');
 
-//   expect(response.status).toBe(200);
+//   expect(response.status).toBe(201);
 //   expect(response.body).toEqual(
 //     expect.objectContaining({
-//       foodFamily: [
+//       food: [
 //         {
-//           id: 8,
-//           name: 'vegetables',
-//           prob: 1.0,
+//           mealId: '1',
+//           name: 'ketchup sauce',
+//           weight: 0,
+//         },
+//         {
+//           mealId: '1',
+//           name: 'ketchup sauce',
+//           weight: 0,
+//         },
+//         {
+//           mealId: '1',
+//           name: 'french fries',
+//           weight: 0,
+//         },
+//         {
+//           mealId: '1',
+//           name: 'mayonnaise',
+//           weight: 0,
+//         },
+//         {
+//           mealId: '1',
+//           name: 'french fries',
+//           weight: 0,
 //         },
 //       ],
+//       imageId: 1728310,
 //     })
 //   );
 // });

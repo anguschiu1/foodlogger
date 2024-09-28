@@ -4,7 +4,7 @@ import { fileFromPath } from 'formdata-node/file-from-path';
 import fs from 'node:fs';
 import dotenv from 'dotenv';
 
-export const recogniseFood = async (imagePath: fs.PathLike) => {
+export const submitImage = async (imagePath: fs.PathLike) => {
   dotenv.config();
   const formData = new FormData();
   formData.set('image', await fileFromPath(imagePath.toString()));
@@ -18,5 +18,20 @@ export const recogniseFood = async (imagePath: fs.PathLike) => {
     },
     data: formData,
   };
+  return (await axios.request(config)).data;
+};
+
+export const getIngredients = async (imageId: string) => {
+  dotenv.config();
+  const config = {
+    method: 'post',
+    url: `${process.env.LOG_MEAL_API}/v2/recipe/ingredients/v1.0?language=eng`,
+    headers: {
+      Authorization: `Bearer ${process.env.LOG_MEAL_BEARER_TOKEN}`,
+    },
+    data: { imageId: imageId },
+  };
+
+  console.log('Ingredients request:', config);
   return (await axios.request(config)).data;
 };
