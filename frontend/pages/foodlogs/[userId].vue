@@ -88,7 +88,7 @@ const deleteFoodlog = async (foodlogId) => {
                     <img
                       v-for="meal in foodlog.Meals"
                       :key="meal.id"
-                      :src="meal.image"
+                      :src="`/api/uploads/${meal.image}`"
                       alt="food image"
                     />
                   </TableCell>

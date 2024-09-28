@@ -206,6 +206,8 @@ components:
           type: array
         name:
           type: string
+        image:
+          type: string
       required:
         - finishedAt
         - name

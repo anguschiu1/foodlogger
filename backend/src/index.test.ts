@@ -123,6 +123,7 @@ describe('API Tests', () => {
           {
             finishedAt: '2023-12-31T10:00:00',
             name: 'Breakfast',
+            image: '1727540618373.jpg',
             foodConsumed: [
               {
                 name: 'White bread',
@@ -137,6 +138,7 @@ describe('API Tests', () => {
           {
             finishedAt: '2023-12-31T13:30:00',
             name: 'Lunch',
+            image: '1727532588498.jpg',
             foodConsumed: [
               {
                 name: 'Boiled potatoes',
@@ -165,7 +167,7 @@ describe('API Tests', () => {
             id: 1,
             name: 'Breakfast',
             finishedAt: expect.any(String),
-            image: null,
+            image: '1727540618373.jpg',
             FoodLogId: 1,
             Food: [
               expect.objectContaining({
@@ -186,7 +188,7 @@ describe('API Tests', () => {
             id: 2,
             name: 'Lunch',
             finishedAt: expect.any(String),
-            image: null,
+            image: '1727532588498.jpg',
             FoodLogId: 1,
             Food: [
               expect.objectContaining({

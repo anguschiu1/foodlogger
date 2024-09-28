@@ -3,7 +3,9 @@ import * as z from 'zod';
 import { h } from 'vue';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast/use-toast';
-import { AutoForm } from '@/components/ui/auto-form';
+import { AutoForm, AutoFormField } from '@/components/ui/auto-form';
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
 
 const { toast } = useToast();
 const route = useRoute();
@@ -11,6 +13,7 @@ const userId = route.params.userId;
 console.log('User ID:', userId);
 
 const schema = z.object({
+  file: z.string().optional(),
   date: z.coerce.date(),
   meals: z
     .array(
@@ -41,6 +44,120 @@ const schema = z.object({
     )
     .describe('Define meals'),
 });
+
+const form = useForm({
+  validationSchema: toTypedSchema(schema),
+});
+
+async function prefillFood() {
+  const imageFile = form.values.file;
+  if (!imageFile) return;
+  console.log('Image file:', imageFile);
+
+  const formData = new FormData();
+  console.log('image file size is ' + imageFile.length + 'bytes');
+  // formData.append('image', imageFile);
+
+  // Convert base64 to Blob
+  const byteString = atob(imageFile.split(',')[1]);
+  const mimeString = imageFile.split(',')[0].split(':')[1].split(';')[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  const blob = new Blob([ab], { type: mimeString });
+  formData.append('image', blob, 'image.jpg');
+
+  try {
+    const data = await $fetch('/api/foodimages/1', {
+      method: 'POST',
+      body: formData,
+      // headers: {
+      //   'Content-Type': 'multipart/form-data',
+      // },
+      onResponse() {
+        console.log('API POST request successful.');
+      },
+    });
+    console.log(data);
+    const prefillData = {
+      meals: [
+        {
+          foodConsumed: data.food.map((food) => ({
+            name: food.name,
+            weight: food.weight,
+          })),
+        },
+      ],
+    };
+    form.setFieldValue('meals', prefillData.meals);
+    toast({
+      title: 'Image processed, food/ingredient identified',
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h(
+          'code',
+          { class: 'text-white' },
+          JSON.stringify(prefillData.meals, null, 2)
+        )
+      ),
+    });
+
+    // toast({
+    //   title: 'Food log created successfully',
+    //   description: h(
+    //     'pre',
+    //     { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+    //     h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))
+    //   ),
+    // });
+  } catch (error: unknown) {
+    console.error('Image processing API failed:', error);
+    toast({
+      title: 'Uh oh! Something went wrong.',
+      variant: 'destructive',
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h(
+          'code',
+          { class: 'text-white' },
+          error instanceof Error ? error.message : String(error)
+        )
+      ),
+    });
+  }
+
+  // const prefillData = {
+  //   // date: new Date(),
+  //   meals: [
+  //     {
+  //       // name: 'Breakfast',
+  //       // hour: 8,
+  //       // minute: 0,
+  //       foodConsumed: [
+  //         { name: 'Cereal', weight: 0 },
+  //         { name: 'Bread', weight: 0 },
+  //       ],
+  //     },
+  //   ],
+  // };
+  // form.setFieldValue('meals', prefillData.meals);
+  // toast({
+  //   title: 'Image processed, food/ingredient identified',
+  //   description: h(
+  //     'pre',
+  //     { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+  //     h(
+  //       'code',
+  //       { class: 'text-white' },
+  //       JSON.stringify(prefillData.meals, null, 2)
+  //     )
+  //   ),
+  // });
+}
 
 async function onSubmit(values: Record<string, unknown>) {
   const reqBody = { ...values };
@@ -92,14 +209,6 @@ async function onSubmit(values: Record<string, unknown>) {
       ),
     });
   }
-  // toast({
-  //   title: 'You submitted the following values:',
-  //   description: h(
-  //     'pre',
-  //     { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-  //     h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
-  //   ),
-  // });
 }
 </script>
 
@@ -118,6 +227,13 @@ async function onSubmit(values: Record<string, unknown>) {
             <AutoForm
               class="w-2/3 space-y-6"
               :schema="schema"
+              :form="form"
+              :field-config="{
+                file: {
+                  label: 'Image file',
+                  component: 'file',
+                },
+              }"
               @submit="onSubmit"
             >
               <div class="flex gap-4">
@@ -128,6 +244,12 @@ async function onSubmit(values: Record<string, unknown>) {
                   >Cancel</Button
                 >
               </div>
+              <template #file="slotProps">
+                <div class="flex items-end space-x-2">
+                  <AutoFormField v-bind="slotProps" class="w-full" />
+                  <Button type="button" @click="prefillFood"> Check </Button>
+                </div>
+              </template>
             </AutoForm>
           </CardContent>
         </Card>
