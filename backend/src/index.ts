@@ -70,7 +70,7 @@ app.post(
       });
       const resBody = {
         food: allFood,
-        imageId: data.imageId,
+        image: req.file.path,
       };
       res.status(201).json(resBody);
     } catch (error) {

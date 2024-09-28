@@ -5,7 +5,8 @@ dotenv.config();
 const db = new Sequelize({
   dialect: 'sqlite',
   storage: 'database.sqlite',
-  logging: process.env.LOG_LEVEL === 'info', // Disable all logging
+  logging: process.env.LOG_LEVEL === 'info', // enable logging when log level is set to 'info'
+  // logging: false, // Enable detailed logging for debugging purposes
 });
 (async () => {
   db.sync({ force: true });

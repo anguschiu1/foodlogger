@@ -49,7 +49,9 @@ const form = useForm({
   validationSchema: toTypedSchema(schema),
 });
 
-async function prefillFood() {
+let prefillData = null;
+
+async function prefillFormData() {
   const imageFile = form.values.file;
   if (!imageFile) return;
   console.log('Image file:', imageFile);
@@ -81,7 +83,7 @@ async function prefillFood() {
       },
     });
     console.log(data);
-    const prefillData = {
+    prefillData = {
       meals: [
         {
           foodConsumed: data.food.map((food) => ({
@@ -90,7 +92,9 @@ async function prefillFood() {
           })),
         },
       ],
+      image: data.image,
     };
+    console.log('Prefilled food data:', prefillData);
     form.setFieldValue('meals', prefillData.meals);
     toast({
       title: 'Image processed, food/ingredient identified',
@@ -129,34 +133,6 @@ async function prefillFood() {
       ),
     });
   }
-
-  // const prefillData = {
-  //   // date: new Date(),
-  //   meals: [
-  //     {
-  //       // name: 'Breakfast',
-  //       // hour: 8,
-  //       // minute: 0,
-  //       foodConsumed: [
-  //         { name: 'Cereal', weight: 0 },
-  //         { name: 'Bread', weight: 0 },
-  //       ],
-  //     },
-  //   ],
-  // };
-  // form.setFieldValue('meals', prefillData.meals);
-  // toast({
-  //   title: 'Image processed, food/ingredient identified',
-  //   description: h(
-  //     'pre',
-  //     { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-  //     h(
-  //       'code',
-  //       { class: 'text-white' },
-  //       JSON.stringify(prefillData.meals, null, 2)
-  //     )
-  //   ),
-  // });
 }
 
 async function onSubmit(values: Record<string, unknown>) {
@@ -172,6 +148,11 @@ async function onSubmit(values: Record<string, unknown>) {
       weight: food.weight,
     })),
   }));
+  // Add the uploaded image to the first meal object
+  reqBody.meals[0] = {
+    ...reqBody.meals[0],
+    image: prefillData.image || null,
+  };
   console.log('Form submitted:', reqBody);
   try {
     const data = await $fetch('/api/foodlogs/' + userId, {
@@ -247,7 +228,9 @@ async function onSubmit(values: Record<string, unknown>) {
               <template #file="slotProps">
                 <div class="flex items-end space-x-2">
                   <AutoFormField v-bind="slotProps" class="w-full" />
-                  <Button type="button" @click="prefillFood"> Check </Button>
+                  <Button type="button" @click="prefillFormData">
+                    Check
+                  </Button>
                 </div>
               </template>
             </AutoForm>

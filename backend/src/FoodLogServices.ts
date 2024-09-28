@@ -37,14 +37,6 @@ export const createFoodLogs = async (user_id: number, foodLogData: any) => {
   log.info('Creating new food log in the database');
   log.info(foodLogData);
   log.info(foodLogData.meals);
-  const meals = foodLogData.meals.map((meal: any) => ({
-    finishedAt: meal.finishedAt,
-    name: meal.name,
-    foodConsumed: meal.foodConsumed.map((food: any) => ({
-      name: food.name,
-      weight: food.weight,
-    })),
-  }));
   if (!user_id || !foodLogData.date || !foodLogData.meals) {
     log.info('Missing required data to create foodlogs.');
     throw new Error('Missing required data to create foodlogs.');
