@@ -21,3 +21,5 @@ dist/
 ehthumbs.db
 Thumbs.db
 backend/database.sqlite
+
+uploads/
