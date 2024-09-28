@@ -446,6 +446,48 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserCreate'
+  /users/login:
+    post:
+      description: Login validation credentials for user
+      operationId: loginUser
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+                  status:
+                    default: success
+                    enum:
+                      - success
+                    type: string
+                required:
+                  - status
+                  - data
+                title: LoginUser
+                type: object
+          description: Login Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerErrror'
+      summary: Login User
+      tags:
+        - user
+      requestBody:
+        required: true
+        description: Provide email and password to login user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
   /users/{user_id}:
     patch:
       operationId: updateUser

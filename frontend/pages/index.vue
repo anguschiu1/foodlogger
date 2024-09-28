@@ -42,39 +42,23 @@ const onSubmit = handleSubmit(async (values) => {
   formValues.email = values.email;
   formValues.password = values.password;
   try {
-    //TODO: Implement API call to authenticate user, login by email and password
-    const data: data = await $fetch('/api/users/1', {
-      method: 'GET',
+    const data: data = await $fetch('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify(values),
       onResponse() {
-        console.log('API request successful:');
+        console.log('User Login POST request successful:');
       },
     });
-    console.log('API request successful:', data);
-    if (data.email === formValues.email) {
-      toast({
-        title: 'Logging in...',
-        description: h(
-          'pre',
-          { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-          h('code', { class: 'text-white' }, data.email)
-        ),
-      });
-      console.log('userId:', data.id);
-      navigateTo('/foodlogs/' + data.id);
-    } else {
-      toast({
-        title: 'Invalid credentials',
-        variant: 'destructive',
-        description: h(
-          'pre',
-          { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-          h('code', { class: 'text-white' }, 'Email or password is incorrect')
-        ),
-      });
-      console.log('Invalid credentials');
-    }
+    console.log('User Login POST request response:', data);
+    toast({
+      title: 'Success! Logging in...',
+    });
+    console.log('userId:', data.data.id);
+    setTimeout(() => {
+      navigateTo('/foodlogs/' + data.data.id);
+    }, 2000); // Wait for 2 seconds before redirecting
   } catch (error: unknown) {
-    console.error('API request failed:', error);
+    console.error('API request response:', error);
     toast({
       title: 'Uh oh! Something went wrong.',
       variant: 'destructive',
@@ -111,7 +95,7 @@ const onSubmit = handleSubmit(async (values) => {
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="joe.doe@example.com"
+                      placeholder="john.doe@example.com"
                       v-bind="componentField"
                     />
                   </FormControl>

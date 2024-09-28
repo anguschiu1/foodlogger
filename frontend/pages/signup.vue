@@ -64,7 +64,7 @@ const onSubmit = handleSubmit(async (values) => {
     });
     setTimeout(() => {
       navigateTo('/');
-    }, 3000); // Wait for 3 seconds before redirecting
+    }, 2000); // Wait for 2 seconds before redirecting
   } catch (error: unknown) {
     console.error('API request failed:', error);
     toast({

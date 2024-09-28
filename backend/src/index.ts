@@ -4,7 +4,7 @@ import path from 'path';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { submitImage, getIngredients } from './LogMealServices';
 import { getFoodLogs, createFoodLogs, deleteFoodLogs } from './FoodLogServices';
-import { getUsers, createUsers, updateUsers } from './UserServices';
+import { getUsers, createUsers, updateUsers, loginUser } from './UserServices';
 import multer from 'multer';
 
 const storage = multer.diskStorage({
@@ -138,6 +138,37 @@ app.post('/users', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error creating user:', (error as Error).message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.post('/users/login', async (req: Request, res: Response) => {
+  try {
+    log.info('Received user data:', req.body);
+    const { user, status } = await loginUser(req.body);
+    if (status === 200) {
+      res.status(200).json({
+        data: {
+          city: user.city,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user.id,
+        },
+        status: 'success',
+      });
+    } else if (status === 400) {
+      res.status(400).json({ message: 'Bad Request' });
+      return;
+    } else if (status === 401) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    } else {
+      res.status(500).json({ message: 'Internal Server Error' });
+      return;
+    }
+  } catch (error) {
+    console.error('Error login user:', (error as Error).message);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });

@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       proxy: {
         '/api/': {
           target: 'http://localhost:4000', // Your Node.js server URL
+          changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },

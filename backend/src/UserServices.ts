@@ -36,6 +36,27 @@ export const createUsers = async (userData: any) => {
   return user.toJSON();
 };
 
+export const loginUser = async (userData: any) => {
+  log.info('Logging in user');
+  log.info(userData);
+  if (!userData.email || !userData.password) {
+    log.info('Missing required login data');
+    return { user: null, status: 400 };
+  }
+
+  const user: any = await User.findOne({ where: { email: userData.email } });
+  if (user === null) {
+    log.info('User not found in the database. Email: ', userData.email);
+    return { user: null, status: 401 };
+  }
+  const isMatch = await bcrypt.compare(userData.password, user.password);
+  if (!isMatch) {
+    log.info('Invalid password for user. Email: ', userData.email);
+    return { user: null, status: 401 };
+  }
+  return { status: 200, user: user.toJSON() };
+};
+
 export const updateUsers = async (user_id: number, userData: any) => {
   log.info('Updating user in the database');
   log.info(userData);

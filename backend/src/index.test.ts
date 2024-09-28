@@ -58,7 +58,44 @@ describe('API Tests', () => {
     const response = await supertest(app).get('/users');
     expect(response.status).toBe(405);
   });
-
+  test('POST /users/login should login user, return HTTP 200 and User object', async () => {
+    const response = await supertest(app).post('/users/login').send({
+      email: 'john.doe@example.com',
+      password: 'password123',
+    });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      data: {
+        email: 'john.doe@example.com',
+        firstName: 'John',
+        lastName: 'Doe',
+        city: 'Cambridge',
+        id: 1,
+      },
+      status: 'success',
+    });
+  });
+  test('POST /users/login should reject wrong email/password combination and return HTTP 401', async () => {
+    const response = await supertest(app).post('/users/login').send({
+      email: 'john.doe@example.com',
+      password: 'WRONG_PASSWORD',
+    });
+    expect(response.status).toBe(401);
+  });
+  test('POST /users/login should reject wrong email/password combination and return HTTP 401', async () => {
+    const response = await supertest(app).post('/users/login').send({
+      email: 'wrong.email@example.com',
+      password: 'password123',
+    });
+    expect(response.status).toBe(401);
+  });
+  test('POST /users/login should reject invalid input and return HTTP 400', async () => {
+    const response = await supertest(app).post('/users/login').send({
+      emailwrong: 'john.doe@example.com',
+      passwordwrong: 'password123',
+    });
+    expect(response.status).toBe(400);
+  });
   test('PATCH /users/1 should correctly modify user information and return HTTP 204', async () => {
     const response = await supertest(app).patch('/users/1').send({
       email: 'xjohn.doe@example.com',
