@@ -4,7 +4,7 @@ This is Nuxt 3 web app project that seeks to encourage people to keep track of t
 
 ## Features
 
-- User authentication and registration
+- User basic registration
 - Food log creation and management
 - Meal tracking with image support
 - RESTful API for data operations
@@ -13,7 +13,7 @@ This is Nuxt 3 web app project that seeks to encourage people to keep track of t
 
 - Frontend: Nuxt 3, Vue 3, Tailwind CSS, shadcn-vue
 - Backend: Node.js, Express, Sequelize, SQLite
-- Authentication: bcrypt for password hashing
+- Authentication: bcrypt for password hashing on SQLite
 
 ## Setup
 
@@ -70,25 +70,26 @@ By default, the frontend can be accessible via browser at `http://localhost:3000
 
 The following items are on the project's todo list:
 
-- Implement user profile management features
 - TODO: Implement JWT for session authentication and authorization
+- TODO: Image file preprocessing to ehance the image recognition accuracy
+- Logmeal free tier only allow 25 API calls per day. Source for other vendors to improve UX.
+- TODO: Develop a mobile app version for iOS and Android
+- TODO: Source for a comprehensive nutrition database
+- FIXME: Squash many UX nuances and bugs.
 - Add data visualization for food intake trends
-- Integrate with third-party fitness tracking APIs
-- Enhance image recognition accuracy for food logging
-- Develop a mobile app version for iOS and Android
 - Implement social sharing features for meal achievements
-- Create a comprehensive nutrition database
+- Implement user profile management features
 - Add multi-language support for international users
 - Implement advanced search and filtering for food logs
 - Develop a recommendation system for balanced meals
 
 ## API Documentation
 
-API endpoints are documented using OpenAPI. Refer to backend/src/api_v1.yaml for details.
+API endpoints are documented using OpenAPI. Please refers either:
 
-## Contributing
-
-Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+1. Copy [YAML](backend/src/api_v1.yaml) file in the repository and paste to [Swagger.io](https://editor-next.swagger.io), or
+2. Visit [API spec](backend/src/doc/index.html) to check the generated API document, or
+3. Visit `/spec` on browser or import URL to Postman, once the backend server is running (e.g. http://localhost:4000/spec)
 
 ## License
 

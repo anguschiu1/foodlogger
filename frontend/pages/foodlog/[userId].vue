@@ -198,7 +198,10 @@ async function onSubmit(values: Record<string, unknown>) {
           <CardHeader class="flex flex-row items-center">
             <div class="grid gap-2">
               <CardTitle>Add New Food Logs</CardTitle>
-              <CardDescription> Add meals and food details </CardDescription>
+              <CardDescription>
+                Note: Due to API throughput limitations, only one meal image
+                will be processed for the first meal.
+              </CardDescription>
             </div>
           </CardHeader>
           <CardContent>
