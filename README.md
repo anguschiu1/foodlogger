@@ -99,7 +99,7 @@ The following items are on the project's todo list:
 API endpoints are documented using OpenAPI. Please refers either:
 
 1. Copy [YAML](backend/src/api_v1.yaml) file in the repository and paste to [Swagger.io](https://editor-next.swagger.io), or
-2. Visit [API spec](backend/src/doc/index.html) to check the generated API document, or
+2. Visit [API spec](backend/docs/index.html) to check the generated API document, or
 3. Visit `/spec` on browser or import URL to Postman, once the backend server is running (e.g. http://localhost:4000/spec)
 
 ## License
