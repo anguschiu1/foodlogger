@@ -20,10 +20,10 @@ This is a Nuxt 3 web app project that seeks to encourage people to keep track of
 
 ## Environment Setup
 
-Suggest node version: v22 or above (tested: v22.9.0)
-Suggest NPM version: v10.5.1 or above (tested: v10.8.3 )
+- Suggest node version: v22 or above (tested: v22.9.0)
+- Suggest NPM version: v10.5.1 or above (tested: v10.8.3 )
 
-- Please apply the sample environment variable file, [\_.env](backend_.env) file as `.env` in `backend` folder, i.e.
+Please apply the sample environment variable file, [\_.env](backend_.env) file as `.env` in `backend` folder, i.e.
 
 ```bash
 cd backend
