@@ -195,11 +195,10 @@ const onSubmit = handleSubmit(async (values) => {
                 </FormItem>
               </FormField>
             </div>
-            <Button type="submit" class="w-full"> Create an account </Button>
-            <!-- <Button variant="outline" class="w-full"> Sign up with GitHub </Button> -->
+            <Button type="submit" class="w-full"> Update </Button>
           </div>
           <div class="mt-4 text-center text-sm">
-            Already have an account?
+            Go back to
             <a href="/" class="underline"> Sign in </a>
           </div>
         </form>
