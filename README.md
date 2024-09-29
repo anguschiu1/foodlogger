@@ -1,19 +1,22 @@
-# A Food logger with image recognition
+# A Food Logger with Image Recognition
 
-This is Nuxt 3 web app project that seeks to encourage people to keep track of their daily intake, by improving UX experience through image food recognition offered by LogMeal.
+This is a Nuxt 3 web app project that seeks to encourage people to keep track of their daily intake by improving UX experience through image food recognition offered by LogMeal.
 
 ## Features
 
 - User basic registration
 - Food log creation and management
 - Meal tracking with image support
-- RESTful API for data operations
+- Demonstrating RESTful API for data operations (GET, POST, PATCH, DELETE)
 
 ## Tech Stack
 
 - Frontend: Nuxt 3, Vue 3, Tailwind CSS, shadcn-vue
 - Backend: Node.js, Express, Sequelize, SQLite
 - Authentication: bcrypt for password hashing on SQLite
+- Testing: Vitest and Supertest for auto-testing backend API endpoints
+- OpenAPI 3.0 specifications
+- API Validation: Express Openapi Validator to auto-validate incoming/outoging requests
 
 ## Environment Setup
 
@@ -27,7 +30,7 @@ cd backend
 cp _.env .env
 ```
 
-**IMPORTANT NOTICE:Bearer token in the env file, even though it is free API without any PII, should not be normally exist in a repository. The token provided here is only for the ease of testing before 14-Oct,2024, and will be invalidated without further notice!**
+**IMPORTANT NOTICE: The bearer token in the env file, even though it is for a free API without any PII, should not normally exist in a repository. The token provided here is only for ease of testing before 14-Oct-2024 and will be invalidated without further notice!**
 
 ## Installation
 
@@ -54,7 +57,7 @@ By default, the API endpoint of backend server on `http://localhost:4000`.
 
 See API spec output yaml on http://localhost:4000/spec to verify the backend server running and is accessible.
 
-**Note: The base URL of API enpoint is configurable through editing `.env` local file, and please remember to update `.nuxt.config.ts` as well to ensure the frontend app aware of the change.**
+**Note: The base URL of API enpoint is configurable through editing `.env` local file, and please remember to update frontend `.nuxt.config.ts` config file as well.**
 
 ### Start the frontend nitro dev server
 
@@ -96,11 +99,11 @@ The following items are on the project's todo list:
 
 ## API Documentation
 
-API endpoints are documented using OpenAPI. Please refers either:
+API endpoints are documented using OpenAPI. Please refer to either:
 
-1. Copy [YAML](backend/src/api_v1.yaml) file in the repository and paste to [Swagger.io](https://editor-next.swagger.io), or
-2. Visit [API spec](backend/docs/index.html) to check the generated API document, or
-3. Visit `/spec` on browser or import URL to Postman, once the backend server is running (e.g. http://localhost:4000/spec)
+1. Copy the [YAML](backend/src/api_v1.yaml) file in the repository and paste to [Swagger.io](https://editor-next.swagger.io), or
+2. Download [API spec](backend/docs/index.html) HTML file to check the generated API document, or
+3. Visit `/spec` endpoint (via browser or import URL to Postman) when the backend server is running (e.g. http://localhost:4000/spec)
 
 ## License
 
