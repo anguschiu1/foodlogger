@@ -75,12 +75,7 @@ const onSubmit = handleSubmit(async (values) => {
     });
     console.log(data);
     toast({
-      title: 'User created successfully! Logging in...',
-      description: h(
-        'pre',
-        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-        h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))
-      ),
+      title: 'User details updated. Returning to login page...',
     });
     setTimeout(() => {
       navigateTo('/');

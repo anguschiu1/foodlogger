@@ -105,9 +105,14 @@ const deleteFoodlog = async (foodlogId) => {
                 </TableRow>
               </TableBody>
             </Table>
-            <Button @click="navigateTo(`/foodlog/${userId}`)"
-              >Create Food Log</Button
-            >
+            <div class="grid grid-cols-4 gap-4">
+              <Button @click="navigateTo(`/foodlog/${userId}`)"
+                >Create Food Log</Button
+              >
+              <Button variant="secondary" @click="navigateTo(`/user/${userId}`)"
+                >Update User
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
