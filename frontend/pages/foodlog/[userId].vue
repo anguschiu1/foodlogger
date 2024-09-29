@@ -149,10 +149,12 @@ async function onSubmit(values: Record<string, unknown>) {
     })),
   }));
   // Add the uploaded image to the first meal object
-  reqBody.meals[0] = {
-    ...reqBody.meals[0],
-    image: prefillData.image || null,
-  };
+  if (prefillData) {
+    reqBody.meals[0] = {
+      ...reqBody.meals[0],
+      image: prefillData.image || null,
+    };
+  }
   console.log('Form submitted:', reqBody);
   try {
     const data = await $fetch('/api/foodlogs/' + userId, {
@@ -165,11 +167,6 @@ async function onSubmit(values: Record<string, unknown>) {
     console.log(data);
     toast({
       title: 'Food log created successfully',
-      description: h(
-        'pre',
-        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-        h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))
-      ),
     });
     setTimeout(() => {
       navigateTo('/foodlogs/' + userId);
