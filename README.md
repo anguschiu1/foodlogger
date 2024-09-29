@@ -67,6 +67,16 @@ npm run dev
 
 By default, the frontend can be accessible via browser at `http://localhost:3000`.
 
+## Testing with the food image recognition
+
+You can try with the food photos you have or use the below samples:
+
+- [Tomatoes](backend/src/assets/1724193.jpg)
+- [Fish and chips](backend/src/assets/1728298.jpg)
+- [French fries](backend/src/assets/1728299.jpg)
+- [Eggs benedict](backend/src/assets/1728394.jpg)
+- Or you can find more from [Logmeal](https://logmeal.com/api/demo/)
+
 ## TODO/FIXME List
 
 The following items are on the project's todo list:
