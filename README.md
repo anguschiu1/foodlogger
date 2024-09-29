@@ -15,36 +15,35 @@ This is Nuxt 3 web app project that seeks to encourage people to keep track of t
 - Backend: Node.js, Express, Sequelize, SQLite
 - Authentication: bcrypt for password hashing on SQLite
 
-## Setup
-
-### Environment
+## Environment Setup
 
 Suggest node version: v22 or above (tested: v22.9.0)
 Suggest NPM version: v10.5.1 or above (tested: v10.8.3 )
 
+- Please apply the sample environment variable file, [\_.env](backend_.env) file as `.env` in `backend` folder, i.e.
+
 ```bash
-node -v
-v22.9.0
-npm -v
-10.8.3
+cd backend
+cp _.env .env
 ```
 
-### Steps
+**IMPORTANT NOTICE:Bearer token in the env file, even though it is free API without any PII, should not be normally exist in a repository. The token provided here is only for the ease of testing before 14-Oct,2024, and will be invalidated without further notice!**
 
-1. Clone the repository
-2. Install dependencies for both frontend and backend:
+## Installation
 
-   ```bash
-   cd frontend
-   npm install
+Install dependencies for both frontend and backend:
 
-   cd ../backend
-   npm install
-   ```
+```bash
+cd frontend
+npm install
+
+cd ../backend
+npm install
+```
 
 ## Running in development environment
 
-1. Start the backend dev server:
+### Start the backend dev server
 
 ```bash
 cd backend
@@ -57,7 +56,9 @@ See API spec output yaml on http://localhost:4000/spec to verify the backend ser
 
 **Note: The base URL of API enpoint is configurable through editing `.env` local file, and please remember to update `.nuxt.config.ts` as well to ensure the frontend app aware of the change.**
 
-1. **Open a new terminal** and start the frontend nitro dev server:
+### Start the frontend nitro dev server
+
+On a new terminal, run
 
 ```bash
 cd frontend

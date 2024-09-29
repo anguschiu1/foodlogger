@@ -91,7 +91,7 @@ const deleteFoodlog = async (foodlogId) => {
                         :key="meal.id"
                         :src="`/api/${meal.image}`"
                         alt="food image"
-                      />
+                      >
                     </template>
                   </TableCell>
                   <TableCell>
