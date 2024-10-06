@@ -4,12 +4,14 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc && npm run api-doc",
-    "start": "node dist/index.js",
+    "build": "tsc && npm run api-doc && npm run cp-api-spec",
+    "start": "node dist/src/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --watch 'src/**/*.yaml' src/index.ts",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "api-doc": "npx redoc-cli bundle src/api_v1.yaml -o docs/index.html"
+    "api-doc": "npx redoc-cli bundle src/api_v1.yaml -o docs/index.html",
+    "cp-api-spec": "cp ./src/api_v1.yaml ./dist/src/api_v1.yaml",
+    "vercel-build": "echo hello from Vercel"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,7 @@
     "@types/multer": "^1.4.12",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "5.0.0",
     "express-openapi-validator": "^5.3.7",
@@ -30,6 +33,7 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.5.5",
     "@types/supertest": "^6.0.2",

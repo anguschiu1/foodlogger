@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import supertest from 'supertest';
-import app from './index';
+import app from './app';
 import sequelize from './db';
 import fs from 'fs';
 import path from 'path';
