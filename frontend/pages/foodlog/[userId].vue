@@ -37,7 +37,7 @@ const schema = z.object({
                 name: z.string().max(100),
                 weight: z.number().min(0).max(10000),
               })
-              .describe('Food / ingredients')
+              .describe('Food / ingredients (weight in grams)')
           )
           .describe('Food consumed in this meal'),
       })
@@ -55,23 +55,26 @@ async function prefillFormData() {
   const imageFile = form.values.file;
   if (!imageFile) return;
   console.log('Image file:', imageFile);
-
-  const formData = new FormData();
-  console.log('image file size is ' + imageFile.length + 'bytes');
-  // formData.append('image', imageFile);
-
-  // Convert base64 to Blob
-  const byteString = atob(imageFile.split(',')[1]);
-  const mimeString = imageFile.split(',')[0].split(':')[1].split(';')[0];
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-  const blob = new Blob([ab], { type: mimeString });
-  formData.append('image', blob, 'image.jpg');
-
   try {
+    const formData = new FormData();
+    console.log('image file size is ' + imageFile.length + 'bytes');
+    // formData.append('image', imageFile);
+
+    if (imageFile.length > 1024 * 1024) {
+      throw new Error('Image file size exceeds the limit of 1MB.');
+    }
+
+    // Convert base64 to Blob
+    const byteString = atob(imageFile.split(',')[1]);
+    const mimeString = imageFile.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeString });
+    formData.append('image', blob, 'image.jpg');
+
     const data = await $fetch('/api/foodimages/1', {
       method: 'POST',
       body: formData,

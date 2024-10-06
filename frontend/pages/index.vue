@@ -109,9 +109,6 @@ const onSubmit = handleSubmit(async (values) => {
                 <FormItem v-auto-animate>
                   <div class="flex items-center">
                     <Label for="password">Password</Label>
-                    <a href="#" class="ml-auto inline-block text-sm underline">
-                      Try demo access
-                    </a>
                   </div>
                   <FormControl>
                     <Input type="password" v-bind="componentField" />
