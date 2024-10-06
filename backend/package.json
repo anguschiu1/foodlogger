@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc && npm run api-doc && npm run cp-api-spec",
+    "build": "tsc && npm i && npm run api-doc && npm run cp-api-spec",
     "start": "node dist/src/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --watch 'src/**/*.yaml' src/index.ts",
     "test": "vitest",
